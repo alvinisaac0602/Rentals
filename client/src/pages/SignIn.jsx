@@ -1,25 +1,33 @@
-import { set } from "mongoose";
-import React, { useState } from "react";
+import React from "react";
+
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SignInStart,
+  SignInSuccess,
+  SignInFailure,
+} from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.user); // must match "user" in store
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.id]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(SignInStart());
       const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -29,52 +37,54 @@ const SignIn = () => {
       });
 
       const data = await response.json();
-      console.log(data);
-
-      if (data.success == false) {
-        setLoading(false);
-        setError(data.message);
+      if (data.success === false) {
+        dispatch(SignInFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+
+      dispatch(SignInSuccess(data));
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(SignInFailure(error.message));
     }
   };
 
   return (
-    <div className="p-3 max-w-md mx-auto ">
+    <div className="p-3 max-w-md mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input
           type="email"
+          id="email"
           placeholder="Email"
           className="border p-3 rounded-lg"
-          id="email"
           onChange={handleChange}
+          required
         />
         <input
           type="password"
+          id="password"
           placeholder="Password"
           className="border p-3 rounded-lg"
-          id="password"
           onChange={handleChange}
+          required
         />
-
-        <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 transition-opacity duration-200 cursor-pointer">
+        <button
+          type="submit"
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 transition-opacity duration-200 cursor-pointer"
+        >
           {loading ? "Loading..." : "Sign In"}
         </button>
+        <OAuth />
       </form>
 
       <div className="text-center mt-4">
-        <span className="text-gray-500">Dont have an account? </span>
-        <a href="/sign-up" className="text-blue-500 hover:underline">
+        <span className="text-gray-500">Don't have an account? </span>
+        <Link to="/sign-up" className="text-blue-500 hover:underline">
           Sign Up
-        </a>
+        </Link>
       </div>
+
       {error && (
         <div className="text-red-500 text-center mt-4">
           <p>{error}</p>

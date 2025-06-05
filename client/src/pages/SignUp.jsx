@@ -1,6 +1,7 @@
 import { set } from "mongoose";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const [error, setError] = useState(null);
@@ -74,6 +75,8 @@ const SignUp = () => {
         <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 transition-opacity duration-200 cursor-pointer">
           {loading ? "Loading..." : "Sign Up"}
         </button>
+
+        <OAuth />
       </form>
 
       <div className="text-center mt-4">

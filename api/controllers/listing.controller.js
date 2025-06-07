@@ -79,3 +79,50 @@ export const getListing = async (req, res, next) => {
     next(error);
   }
 };
+export const getListings = async (req, res, next) => {
+  console.log("Query Params:", req.query);
+
+  try {
+    const limit = parseInt(req.query.limit) || 9;
+    const startIndex = parseInt(req.query.startIndex) || 0;
+
+    const query = {};
+
+    // Text search on name
+    if (req.query.searchTerm) {
+      query.name = { $regex: req.query.searchTerm, $options: "i" };
+    }
+
+    // Type filter
+    if (req.query.type && req.query.type !== "all") {
+      query.type = req.query.type;
+    }
+
+    // Boolean filters
+    if (req.query.offer === "true") {
+      query.offer = true;
+    }
+
+    if (req.query.furnished === "true") {
+      query.furnished = true;
+    }
+
+    if (req.query.parking === "true") {
+      query.parking = true;
+    }
+
+    // Sort field & order
+    const sortField = req.query.sort || "createdAt";
+    const sortOrder = req.query.order === "asc" ? 1 : -1;
+
+    const listings = await Listing.find(query)
+      .sort({ [sortField]: sortOrder })
+      .skip(startIndex)
+      .limit(limit);
+
+    res.status(200).json(listings);
+  } catch (error) {
+    console.error("getListings error:", error);
+    next(error);
+  }
+};

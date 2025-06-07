@@ -8,6 +8,9 @@ import Header from "./components/Header";
 import PrivateRoutes from "./components/PrivateRoutes";
 import CreateListing from "./pages/CreateListing";
 import Listing from "./pages/Listing";
+import Footer from "./components/Footer";
+import UpdateListing from "./pages/UpdateListing";
+import Search from "./pages/Search";
 
 const App = () => {
   return (
@@ -18,13 +21,15 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/listing/:id" element={<Listing />} />
+        <Route path="/listing/:listingId" element={<Listing />} />
+        <Route path="/search" element={<Search />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />
-          <Route path="/listing/:id" element={<Listing />} />
+          <Route path="/update-listing/:id" element={<UpdateListing />} />
         </Route>
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 };

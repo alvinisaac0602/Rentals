@@ -40,7 +40,7 @@ const OAuth = () => {
     <button
       onClick={handleGoogleClick}
       type="button"
-      className="bg-red-500 text-white p-3 rounded-lg uppercase hover:opacity-95"
+      className="bg-red-500 text-white p-3 rounded-lg uppercase hover:opacity-95 cursor-pointer"
     >
       Continue with Google
     </button>

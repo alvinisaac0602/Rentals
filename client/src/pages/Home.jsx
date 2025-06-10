@@ -11,7 +11,7 @@ export default function Home() {
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
   SwiperCore.use([Navigation]);
-  console.log(offerListings);
+
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
@@ -40,56 +40,103 @@ export default function Home() {
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
-        log(error);
+        console.log(error);
       }
     };
     fetchOfferListings();
   }, []);
-  return (
-    <div>
-      {/* listing results for offer, sale and rent */}
 
-      <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-5">
-        {offerListings && offerListings.length > 0 && <div className=""></div>}
-        {rentListings && rentListings.length > 0 && (
-          <div className="">
-            <div className="my-1">
-              <h2 className="text-2xl font-semibold text-slate-600">
-                Recent places for rent
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-white to-white text-gray-700 py-16 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-3xl sm:text-5xl font-bold mb-4 tracking-tight">
+            Find Your Perfect Space
+          </h1>
+          <p className="text-lg sm:text-xl max-w-xl mx-auto">
+            Find the space you deserve — browse stunning homes for rent and
+            sale, handpicked to match your lifestyle.
+            <b> Call us on 0789186476/0741319191</b>
+          </p>
+        </div>
+      </section>
+
+      {/* Listings */}
+      <div className="max-w-6xl mx-auto px-4 py-10 space-y-16">
+        {/* Offer Listings */}
+        {offerListings.length > 0 && (
+          <section>
+            <div className="mb-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-700">
+                Special Offers
               </h2>
-              {/* <Link
-                className="text-sm text-blue-800 hover:underline"
-                to={"/search?type=rent"}
+              <Link
+                to="/search?offer=true"
+                className="text-blue-600 hover:underline text-sm"
               >
-                Show more places for rent
-              </Link> */}
+                View all offers
+              </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <Swiper
+              navigation
+              slidesPerView={1}
+              spaceBetween={20}
+              className="rounded-lg"
+            >
+              {offerListings.map((listing) => (
+                <SwiperSlide key={listing._id}>
+                  <div className="max-w-md mx-auto">
+                    <ListingItem listing={listing} />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+        )}
+
+        {/* Rent Listings */}
+        {rentListings.length > 0 && (
+          <section>
+            <div className="mb-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-700">
+                Properties for rent
+              </h2>
+              <Link
+                to="/search?type=rent"
+                className="text-blue-600 hover:underline text-sm"
+              >
+                View more rentals
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {rentListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}
             </div>
-          </div>
+          </section>
         )}
-        {saleListings && saleListings.length > 0 && (
-          <div className="">
-            <div className="my-3">
-              <h2 className="text-2xl font-semibold text-slate-600">
-                Recent places for sale
+
+        {/* Sale Listings */}
+        {saleListings.length > 0 && (
+          <section>
+            <div className="mb-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-700">
+                Properties for Sale
               </h2>
               <Link
-                className="text-sm text-blue-800 hover:underline"
-                to={"/search?type=sale"}
+                to="/search?type=sale"
+                className="text-blue-600 hover:underline text-sm"
               >
-                Show more places for sale
+                View more properties
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {saleListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}
             </div>
-          </div>
+          </section>
         )}
       </div>
     </div>

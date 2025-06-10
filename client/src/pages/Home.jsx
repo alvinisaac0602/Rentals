@@ -33,7 +33,6 @@ export default function Home() {
         console.log(error);
       }
     };
-
     const fetchSaleListings = async () => {
       try {
         const res = await fetch("/api/listing/get?type=sale&limit=4");
@@ -49,21 +48,25 @@ export default function Home() {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-white to-white text-gray-700 py-16 px-4">
+      <section className="bg-white text-gray-800 py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-5xl font-bold mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-bold mb-6 tracking-tight">
             Find Your Perfect Space
           </h1>
-          <p className="text-lg sm:text-xl max-w-xl mx-auto">
-            Find the space you deserve — browse stunning homes for rent and
-            sale, handpicked to match your lifestyle.
-            <b> Call us on 0789186476/0741319191</b>
+          <p className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto text-gray-600">
+            Discover luxurious homes for rent and sale — handpicked to match
+            your lifestyle.
+            <br className="hidden sm:block" />
+            <span className="font-medium text-gray-700">
+              {" "}
+              Call us: 0789186476 / 0741319191
+            </span>
           </p>
         </div>
       </section>
 
       {/* Listings */}
-      <div className="max-w-6xl mx-auto px-4 py-10 space-y-16">
+      <div className="max-w-6xl mx-auto px-4 py-12 space-y-20">
         {/* Offer Listings */}
         {offerListings.length > 0 && (
           <section>
@@ -80,13 +83,17 @@ export default function Home() {
             </div>
             <Swiper
               navigation
-              slidesPerView={1}
               spaceBetween={20}
+              breakpoints={{
+                640: { slidesPerView: 1 },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+              }}
               className="rounded-lg"
             >
               {offerListings.map((listing) => (
                 <SwiperSlide key={listing._id}>
-                  <div className="max-w-md mx-auto">
+                  <div className="p-2">
                     <ListingItem listing={listing} />
                   </div>
                 </SwiperSlide>
@@ -100,7 +107,7 @@ export default function Home() {
           <section>
             <div className="mb-6 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-700">
-                Properties for rent
+                Properties for Rent
               </h2>
               <Link
                 to="/search?type=rent"
@@ -109,7 +116,7 @@ export default function Home() {
                 View more rentals
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {rentListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}
@@ -131,7 +138,7 @@ export default function Home() {
                 View more properties
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {saleListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}

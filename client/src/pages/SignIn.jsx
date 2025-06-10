@@ -1,6 +1,4 @@
-import React from "react";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,13 +7,15 @@ import {
   SignInFailure,
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
+import { Eye, EyeOff } from "lucide-react"; // Add this if you're using lucide icons
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.user); // must match "user" in store
+  const { loading, error } = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -30,9 +30,7 @@ const SignIn = () => {
       dispatch(SignInStart());
       const response = await fetch("/api/auth/signin", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -61,14 +59,27 @@ const SignIn = () => {
           onChange={handleChange}
           required
         />
-        <input
-          type="password"
-          id="password"
-          placeholder="Password"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-          required
-        />
+
+        {/* Password Field with Toggle */}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            placeholder="Password"
+            className="border p-3 rounded-lg w-full pr-10"
+            onChange={handleChange}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+
         <button
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 transition-opacity duration-200 cursor-pointer"

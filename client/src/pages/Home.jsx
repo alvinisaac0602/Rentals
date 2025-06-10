@@ -57,12 +57,12 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-slate-600">
                 Recent places for rent
               </h2>
-              <Link
+              {/* <Link
                 className="text-sm text-blue-800 hover:underline"
                 to={"/search?type=rent"}
               >
                 Show more places for rent
-              </Link>
+              </Link> */}
             </div>
             <div className="flex flex-wrap gap-4">
               {rentListings.map((listing) => (

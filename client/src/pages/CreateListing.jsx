@@ -140,6 +140,7 @@ export default function CreateListing() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           ...formData,
           userRef: currentUser._id,

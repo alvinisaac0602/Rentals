@@ -31,6 +31,7 @@ const SignIn = () => {
       const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Include cookies for session management
         body: JSON.stringify(formData),
       });
 

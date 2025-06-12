@@ -54,16 +54,19 @@ export const updateListing = async (req, res, next) => {
   }
 };
 
-export const getUserListings = async (req, res, next) => {
-  if (req.user.id === req.params.id) {
-    try {
-      const listings = await Listing.find({ userRef: req.params.id });
-      res.status(200).json(listings);
-    } catch (error) {
-      next(error);
+export const getUserListings = async (req, res) => {
+  try {
+    const requestedUserId = req.params.id;
+    const authenticatedUserId = req.user?.id;
+
+    if (requestedUserId !== authenticatedUserId) {
+      return res.status(403).json({ success: false, message: "Forbidden" });
     }
-  } else {
-    return next(errorHandler(401, "You can only view your own listings"));
+
+    const listings = await Listing.find({ userRef: requestedUserId });
+    res.status(200).json(listings);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 

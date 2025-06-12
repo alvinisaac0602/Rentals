@@ -4,22 +4,19 @@ import { errorHandler } from "../utils/error.js";
 
 export const createListing = async (req, res) => {
   try {
-    if (!req.body.userRef) {
-      return res
-        .status(400)
-        .json({ success: false, message: "userRef is required" });
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Not authorized" });
     }
-    const listing = await Listing.create(req.body);
+
+    const listing = await Listing.create({
+      ...req.body,
+      userRef: userId, // 🔒 secure from token
+    });
+
     res.status(201).json(listing);
   } catch (error) {
-    if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map((val) => val.message);
-      return res
-        .status(400)
-        .json({ success: false, message: messages.join(", ") });
-    }
-    console.error("Server error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 

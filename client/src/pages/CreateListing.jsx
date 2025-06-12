@@ -140,7 +140,8 @@ export default function CreateListing() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        credentials: "include", // Include cookies for session management
+
         body: JSON.stringify({
           ...formData,
           userRef: currentUser._id,

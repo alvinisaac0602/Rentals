@@ -92,6 +92,7 @@ const Profile = () => {
       dispatch(updateUserStart());
 
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        credentials: "include", // Include cookies for session management
         method: "POST",
         headers: {
           "Content-Type": "application/json",
